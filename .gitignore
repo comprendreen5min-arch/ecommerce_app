@@ -1,0 +1,33 @@
+# Laravel dependencies
+backend/vendor/
+backend/.env
+backend/.env.backup
+backend/.phpunit.result.cache
+backend/storage/*.key
+
+# Node dependencies
+frontend/node_modules/
+backend/node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build output
+frontend/dist/
+frontend/build/
+backend/public/build/
+backend/public/hot
+
+# macOS and Windows system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary and Scratch files
+scratch/
+temp/
