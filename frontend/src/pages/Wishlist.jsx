@@ -63,7 +63,7 @@ const Wishlist = () => {
   return (
     <div>
       <nav className="navbar container">
-        <div className="navbar-brand">Mes Favoris</div>
+        <div className="navbar-brand">Bellelle - Mes Favoris</div>
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           <Link to="/dashboard" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
             🛍️ Catalogue

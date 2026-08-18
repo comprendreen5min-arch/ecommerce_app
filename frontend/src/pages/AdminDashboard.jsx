@@ -137,7 +137,7 @@ const AdminDashboard = () => {
   return (
     <div>
       <nav className="navbar container">
-        <div className="navbar-brand">Admin Dashboard</div>
+        <div className="navbar-brand">Bellelle - Admin Dashboard</div>
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           <Link to="/admin/commandes" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
             📦 Commandes

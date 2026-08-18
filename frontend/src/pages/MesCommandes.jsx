@@ -144,7 +144,7 @@ const MesCommandes = () => {
   return (
     <div>
       <nav className="navbar container">
-        <div className="navbar-brand">Mes Commandes</div>
+        <div className="navbar-brand">Bellelle - Mes Commandes</div>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <Link to="/dashboard" className="btn btn-outline">Retour au catalogue</Link>
         </div>

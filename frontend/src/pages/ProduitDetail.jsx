@@ -139,7 +139,7 @@ const ProduitDetail = () => {
   return (
     <div>
       <nav className="navbar container">
-        <div className="navbar-brand">Détail du Produit</div>
+        <div className="navbar-brand">Bellelle - Détail du Produit</div>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <Link to="/favoris" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
             ❤️ Mes Favoris

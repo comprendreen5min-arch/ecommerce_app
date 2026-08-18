@@ -99,7 +99,7 @@ const ClientDashboard = () => {
   return (
     <div>
       <nav className="navbar container">
-        <div className="navbar-brand">Espace Client</div>
+        <div className="navbar-brand">Bellelle - Espace Client</div>
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           <Link to="/favoris" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
             ❤️ Mes Favoris

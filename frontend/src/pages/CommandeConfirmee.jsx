@@ -39,7 +39,7 @@ const CommandeConfirmee = () => {
   return (
     <div>
       <nav className="navbar container">
-        <div className="navbar-brand">Commande Confirmée</div>
+        <div className="navbar-brand">Bellelle - Commande Confirmée</div>
         <div style={{ display: 'flex', gap: '1rem' }}>
           <Link to="/mes-commandes" className="btn btn-outline">Mes Commandes</Link>
           <button onClick={() => navigate('/dashboard')} className="btn btn-primary">Retour à la boutique</button>

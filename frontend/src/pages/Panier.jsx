@@ -81,7 +81,7 @@ const Panier = () => {
   return (
     <div>
       <nav className="navbar container">
-        <div className="navbar-brand">Votre Panier</div>
+        <div className="navbar-brand">Bellelle - Votre Panier</div>
         <button onClick={() => navigate('/dashboard')} className="btn btn-outline">Continuer vos achats</button>
       </nav>
 
