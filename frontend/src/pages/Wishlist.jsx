@@ -93,41 +93,46 @@ const Wishlist = () => {
           </div>
         ) : (
           <div className="card-grid">
-            {wishlists.map(({ produit }) => (
-              <div key={produit.id} className="card" style={{ position: 'relative' }}>
-                <div 
-                  style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 2, cursor: 'pointer', fontSize: '1.5rem', backgroundColor: 'white', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} 
-                  onClick={() => handleRemove(produit.id)}
-                  title="Retirer des favoris"
-                >
-                  ❤️
-                </div>
-                {produit.stock <= 0 && (
-                  <span style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'var(--danger)', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', zIndex: 1 }}>Rupture</span>
-                )}
-                {produit.image ? (
-                  <img src={`http://127.0.0.1:8000${produit.image}`} alt={produit.nom} className="card-image" />
-                ) : (
-                  <div className="card-image" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
-                    Aucune image
+            {wishlists.map((item) => {
+              const produit = item.produit;
+              if (!produit) return null;
+              
+              return (
+                <div key={produit.id} className="card" style={{ position: 'relative' }}>
+                  <div 
+                    style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 2, cursor: 'pointer', fontSize: '1.5rem', backgroundColor: 'white', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} 
+                    onClick={() => handleRemove(produit.id)}
+                    title="Retirer des favoris"
+                  >
+                    ❤️
                   </div>
-                )}
-                <div className="card-content">
-                  <h3 className="card-title">{produit.nom}</h3>
-                  <div className="card-price">{produit.prix} €</div>
-                  <div className="card-actions">
-                    <button className="btn btn-outline" onClick={() => navigate(`/produits/${produit.id}`)}>Voir le détail</button>
-                    <button 
-                      className="btn btn-primary" 
-                      onClick={() => handleAddToCart(produit.id)}
-                      disabled={produit.stock <= 0}
-                    >
-                      {produit.stock > 0 ? 'Ajouter au panier' : 'Rupture'}
-                    </button>
+                  {produit.stock <= 0 && (
+                    <span style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'var(--danger)', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', zIndex: 1 }}>Rupture</span>
+                  )}
+                  {produit.image ? (
+                    <img src={`http://127.0.0.1:8000${produit.image}`} alt={produit.nom} className="card-image" />
+                  ) : (
+                    <div className="card-image" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
+                      Aucune image
+                    </div>
+                  )}
+                  <div className="card-content">
+                    <h3 className="card-title">{produit.nom}</h3>
+                    <div className="card-price">{produit.prix} €</div>
+                    <div className="card-actions">
+                      <button className="btn btn-outline" onClick={() => navigate(`/produits/${produit.id}`)}>Voir le détail</button>
+                      <button 
+                        className="btn btn-primary" 
+                        onClick={() => handleAddToCart(produit.id)}
+                        disabled={produit.stock <= 0}
+                      >
+                        {produit.stock > 0 ? 'Ajouter au panier' : 'Rupture'}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </main>
