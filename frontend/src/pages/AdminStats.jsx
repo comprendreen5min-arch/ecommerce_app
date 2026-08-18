@@ -41,8 +41,11 @@ const AdminStats = () => {
       <nav className="navbar container">
         <div className="navbar-brand">Admin Statistiques</div>
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <Link to="/admin/commandes" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
+            📦 Commandes
+          </Link>
           <Link to="/admin/dashboard" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
-            📦 Gestion Produits
+            🛍️ Produits
           </Link>
           <button onClick={handleLogout} className="btn btn-outline">Déconnexion</button>
         </div>

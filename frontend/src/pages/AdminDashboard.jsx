@@ -139,8 +139,11 @@ const AdminDashboard = () => {
       <nav className="navbar container">
         <div className="navbar-brand">Admin Dashboard</div>
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <Link to="/admin/commandes" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
+            📦 Commandes
+          </Link>
           <Link to="/admin/stats" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
-            📊 Statistiques
+            📊 Stats
           </Link>
           <button onClick={handleLogout} className="btn btn-outline">Déconnexion</button>
         </div>
