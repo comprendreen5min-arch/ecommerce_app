@@ -10,6 +10,7 @@ import Panier from './pages/Panier';
 import CommandeConfirmee from './pages/CommandeConfirmee';
 import MesCommandes from './pages/MesCommandes';
 import AdminStats from './pages/AdminStats';
+import Wishlist from './pages/Wishlist';
 
 function App() {
   return (
@@ -44,6 +45,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['client', 'admin']}>
               <ClientDashboard />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/favoris" 
+          element={
+            <ProtectedRoute allowedRoles={['client', 'admin']}>
+              <Wishlist />
             </ProtectedRoute>
           } 
         />

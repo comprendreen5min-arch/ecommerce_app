@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 
 const ClientDashboard = () => {
   const [produits, setProduits] = useState([]);
+  const [wishlists, setWishlists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Toutes les catégories');
@@ -13,7 +14,20 @@ const ClientDashboard = () => {
 
   useEffect(() => {
     fetchProduits();
+    fetchWishlists();
   }, []);
+
+  const fetchWishlists = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.get('/wishlist', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setWishlists(response.data.map(w => w.produit_id));
+    } catch (error) {
+      console.error('Erreur wishlist', error);
+    }
+  };
 
   const fetchProduits = async () => {
     try {
@@ -47,6 +61,28 @@ const ClientDashboard = () => {
     }
   };
 
+  const toggleWishlist = async (produitId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (wishlists.includes(produitId)) {
+        await api.delete(`/wishlist/${produitId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setWishlists(wishlists.filter(id => id !== produitId));
+        showToast('Retiré des favoris');
+      } else {
+        await api.post('/wishlist', { produit_id: produitId }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setWishlists([...wishlists, produitId]);
+        showToast('Ajouté aux favoris ❤️');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Erreur lors de la modification des favoris.');
+    }
+  };
+
   const filteredProduits = produits.filter((produit) => {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = 
@@ -65,6 +101,9 @@ const ClientDashboard = () => {
       <nav className="navbar container">
         <div className="navbar-brand">Espace Client</div>
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <Link to="/favoris" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
+            ❤️ Mes Favoris
+          </Link>
           <Link to="/mes-commandes" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
             📦 Mes Commandes
           </Link>
@@ -114,6 +153,12 @@ const ClientDashboard = () => {
           <div className="card-grid">
             {filteredProduits.map((produit) => (
               <div key={produit.id} className="card" style={{ position: 'relative' }}>
+                <div 
+                  style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 2, cursor: 'pointer', fontSize: '1.5rem', backgroundColor: 'white', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} 
+                  onClick={() => toggleWishlist(produit.id)}
+                >
+                  {wishlists.includes(produit.id) ? '❤️' : '🤍'}
+                </div>
                 {produit.stock <= 0 && (
                   <span style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'var(--danger)', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', zIndex: 1 }}>Rupture</span>
                 )}
@@ -129,6 +174,9 @@ const ClientDashboard = () => {
                 )}
                 <div className="card-content">
                   <h3 className="card-title">{produit.nom}</h3>
+                  <div style={{ color: '#f59e0b', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                    {produit.moyenne_notes ? `★ ${Number(produit.moyenne_notes).toFixed(1)} (${produit.avis_count} avis)` : 'Pas encore d\'avis'}
+                  </div>
                   <div className="card-price">{produit.prix} €</div>
                   <p className="card-desc">
                     {produit.description ? 

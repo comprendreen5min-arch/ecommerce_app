@@ -8,12 +8,15 @@ use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\StatsController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\AvisController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/produits', [ProduitController::class, 'index']);
 Route::get('/produits/{id}', [ProduitController::class, 'show']);
+Route::get('/produits/{id}/avis', [AvisController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -36,4 +39,12 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Stats admin
     Route::get('/admin/stats', [StatsController::class, 'index']);
+    
+    // Routes Wishlist
+    Route::get('/wishlist', [WishlistController::class, 'index']);
+    Route::post('/wishlist', [WishlistController::class, 'store']);
+    Route::delete('/wishlist/{produit_id}', [WishlistController::class, 'destroy']);
+    
+    // Route Avis protégée
+    Route::post('/produits/{id}/avis', [AvisController::class, 'store']);
 });

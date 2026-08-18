@@ -9,12 +9,17 @@ class ProduitController extends Controller
 {
     public function index()
     {
-        return response()->json(Produit::all());
+        $produits = Produit::withAvg('avis as moyenne_notes', 'note')
+            ->withCount('avis')
+            ->get();
+        return response()->json($produits);
     }
 
     public function show($id)
     {
-        $produit = Produit::find($id);
+        $produit = Produit::withAvg('avis as moyenne_notes', 'note')
+            ->withCount('avis')
+            ->find($id);
         
         if (!$produit) {
             return response()->json(['message' => 'Produit non trouvé'], 404);

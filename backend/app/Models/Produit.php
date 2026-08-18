@@ -14,4 +14,9 @@ class Produit extends Model
         'categorie',
         'prix',
     ];
+
+    public function avis()
+    {
+        return $this->hasMany(Avis::class);
+    }
 }
