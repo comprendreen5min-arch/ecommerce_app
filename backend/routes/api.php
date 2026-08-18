@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProduitController;
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\StatsController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -26,4 +28,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/panier', [CartController::class, 'store']);
     Route::put('/panier/{id}', [CartController::class, 'update']);
     Route::delete('/panier/{id}', [CartController::class, 'destroy']);
+    
+    // Routes des commandes
+    Route::get('/commandes', [CommandeController::class, 'index']);
+    Route::post('/commandes', [CommandeController::class, 'store']);
+    Route::get('/commandes/{id}', [CommandeController::class, 'show']);
+    
+    // Stats admin
+    Route::get('/admin/stats', [StatsController::class, 'index']);
 });

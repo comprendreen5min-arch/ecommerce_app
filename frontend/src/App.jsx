@@ -7,6 +7,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import ClientDashboard from './pages/ClientDashboard';
 import ProduitDetail from './pages/ProduitDetail';
 import Panier from './pages/Panier';
+import CommandeConfirmee from './pages/CommandeConfirmee';
+import MesCommandes from './pages/MesCommandes';
+import AdminStats from './pages/AdminStats';
 
 function App() {
   return (
@@ -22,6 +25,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/admin/stats" 
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminStats />
             </ProtectedRoute>
           } 
         />
@@ -50,6 +62,24 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['client', 'admin']}>
               <Panier />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/commande-confirmee/:id" 
+          element={
+            <ProtectedRoute allowedRoles={['client', 'admin']}>
+              <CommandeConfirmee />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/mes-commandes" 
+          element={
+            <ProtectedRoute allowedRoles={['client', 'admin']}>
+              <MesCommandes />
             </ProtectedRoute>
           } 
         />

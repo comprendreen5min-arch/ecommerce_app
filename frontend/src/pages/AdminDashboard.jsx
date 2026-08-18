@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 
 const AdminDashboard = () => {
@@ -138,7 +138,12 @@ const AdminDashboard = () => {
     <div>
       <nav className="navbar container">
         <div className="navbar-brand">Admin Dashboard</div>
-        <button onClick={handleLogout} className="btn btn-outline">Déconnexion</button>
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <Link to="/admin/stats" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
+            📊 Statistiques
+          </Link>
+          <button onClick={handleLogout} className="btn btn-outline">Déconnexion</button>
+        </div>
       </nav>
 
       <main className="container" style={{ padding: '2rem 1.5rem', position: 'relative' }}>
@@ -174,7 +179,7 @@ const AdminDashboard = () => {
               </thead>
               <tbody>
                 {produits.map((produit) => (
-                  <tr key={produit.id}>
+                  <tr key={produit.id} style={{ backgroundColor: produit.stock <= 0 ? '#fee2e2' : produit.stock <= 5 ? '#fef3c7' : 'inherit' }}>
                     <td>{produit.id}</td>
                     <td>
                       {produit.image ? (
@@ -186,7 +191,14 @@ const AdminDashboard = () => {
                     <td>{produit.nom}</td>
                     <td>{produit.categorie}</td>
                     <td>{produit.prix} €</td>
-                    <td>{produit.stock}</td>
+                    <td>
+                      <span style={{ 
+                        fontWeight: produit.stock <= 5 ? 'bold' : 'normal',
+                        color: produit.stock <= 0 ? '#991b1b' : produit.stock <= 5 ? '#92400e' : 'inherit'
+                      }}>
+                        {produit.stock}
+                      </span>
+                    </td>
                     <td>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         <button className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.875rem' }} onClick={() => openModal(produit)}>

@@ -159,8 +159,16 @@ const ProduitDetail = () => {
               flexDirection: 'column',
               gap: '1rem' 
             }}>
-              <div style={{ fontSize: '0.9rem', color: produit.stock > 0 ? 'var(--success)' : 'var(--danger)' }}>
-                {produit.stock > 0 ? `En stock : ${produit.stock} unité(s)` : 'Rupture de stock'}
+              <div style={{ fontSize: '0.9rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                {produit.stock <= 0 && (
+                  <span style={{ backgroundColor: 'var(--danger)', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', fontWeight: 'bold' }}>Rupture de stock</span>
+                )}
+                {produit.stock > 0 && produit.stock <= 5 && (
+                  <span style={{ backgroundColor: '#f59e0b', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', fontWeight: 'bold' }}>Stock limité : {produit.stock} unité(s)</span>
+                )}
+                {produit.stock > 5 && (
+                  <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>En stock : {produit.stock} unité(s)</span>
+                )}
               </div>
               
               <div style={{ display: 'flex', gap: '1rem' }}>
@@ -170,7 +178,7 @@ const ProduitDetail = () => {
                   onClick={handleAddToCart}
                   disabled={produit.stock <= 0}
                 >
-                  Ajouter au panier
+                  {produit.stock > 0 ? 'Ajouter au panier' : 'Rupture'}
                 </button>
                 <button 
                   className="btn btn-outline"

@@ -64,7 +64,10 @@ const ClientDashboard = () => {
     <div>
       <nav className="navbar container">
         <div className="navbar-brand">Espace Client</div>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <Link to="/mes-commandes" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
+            📦 Mes Commandes
+          </Link>
           <Link to="/panier" style={{ textDecoration: 'none', color: 'var(--text-main)', position: 'relative', display: 'flex', alignItems: 'center' }}>
             <span style={{ fontSize: '1.25rem' }}>🛒 Panier</span>
             {cartCount > 0 && (
@@ -110,7 +113,13 @@ const ClientDashboard = () => {
         ) : (
           <div className="card-grid">
             {filteredProduits.map((produit) => (
-              <div key={produit.id} className="card">
+              <div key={produit.id} className="card" style={{ position: 'relative' }}>
+                {produit.stock <= 0 && (
+                  <span style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'var(--danger)', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', zIndex: 1 }}>Rupture</span>
+                )}
+                {produit.stock > 0 && produit.stock <= 5 && (
+                  <span style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: '#f59e0b', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', zIndex: 1 }}>Stock limité : {produit.stock}</span>
+                )}
                 {produit.image ? (
                   <img src={`http://127.0.0.1:8000${produit.image}`} alt={produit.nom} className="card-image" />
                 ) : (

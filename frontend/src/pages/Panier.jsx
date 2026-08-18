@@ -63,6 +63,21 @@ const Panier = () => {
     return total + (item.quantite * item.produit.prix);
   }, 0);
 
+  const handleCheckout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.post('/commandes', {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchCartCount();
+      showToast('Commande validée avec succès !');
+      navigate(`/commande-confirmee/${response.data.commande.id}`);
+    } catch (error) {
+      console.error('Erreur lors de la validation de la commande', error);
+      alert('Erreur lors de la validation de la commande.');
+    }
+  };
+
   return (
     <div>
       <nav className="navbar container">
@@ -151,7 +166,7 @@ const Panier = () => {
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>
                 {totalCartPrice.toFixed(2)} €
               </div>
-              <button className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem', marginTop: '1rem' }} onClick={() => alert('Paiement simulé !')}>
+              <button className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem', marginTop: '1rem' }} onClick={handleCheckout}>
                 Valider la commande
               </button>
             </div>
