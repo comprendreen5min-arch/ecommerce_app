@@ -6,6 +6,8 @@ import { useCart } from '../context/CartContext';
 const ClientDashboard = () => {
   const [produits, setProduits] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Toutes les catégories');
   const navigate = useNavigate();
   const { cartCount, fetchCartCount, showToast } = useCart();
 
@@ -45,6 +47,19 @@ const ClientDashboard = () => {
     }
   };
 
+  const filteredProduits = produits.filter((produit) => {
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = 
+      (produit.nom && produit.nom.toLowerCase().includes(searchLower)) || 
+      (produit.description && produit.description.toLowerCase().includes(searchLower));
+    
+    const matchesCategory = 
+      selectedCategory === 'Toutes les catégories' || 
+      produit.categorie === selectedCategory;
+      
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <div>
       <nav className="navbar container">
@@ -70,11 +85,31 @@ const ClientDashboard = () => {
       <main className="container">
         <h2 style={{ marginTop: '2rem' }}>Nos Produits</h2>
         
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+          <input
+            type="text"
+            placeholder="Rechercher par nom ou description..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ flex: 1, minWidth: '250px', padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}
+          />
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            style={{ minWidth: '200px', padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}
+          >
+            <option value="Toutes les catégories">Toutes les catégories</option>
+            <option value="Accessoires">Accessoires</option>
+            <option value="Chapeaux & Accessoires cheveux">Chapeaux & Accessoires cheveux</option>
+            <option value="Sacs & Maroquinerie">Sacs & Maroquinerie</option>
+          </select>
+        </div>
+
         {loading ? (
           <p>Chargement...</p>
         ) : (
           <div className="card-grid">
-            {produits.map((produit) => (
+            {filteredProduits.map((produit) => (
               <div key={produit.id} className="card">
                 {produit.image ? (
                   <img src={`http://127.0.0.1:8000${produit.image}`} alt={produit.nom} className="card-image" />
@@ -104,9 +139,9 @@ const ClientDashboard = () => {
                 </div>
               </div>
             ))}
-            {produits.length === 0 && (
+            {filteredProduits.length === 0 && (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius)' }}>
-                Aucun produit disponible pour le moment.
+                Aucun produit trouvé.
               </div>
             )}
           </div>
