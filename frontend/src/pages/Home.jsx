@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Header from '../components/Header';
 
 const Home = () => {
 
@@ -26,31 +27,7 @@ const Home = () => {
 
   return (
     <>
-      <nav className="navbar">
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link to="/" className="navbar-brand">Bellelle</Link>
-          
-          <div className="nav-links" style={{ display: 'none', '@media (min-width: 768px)': { display: 'flex' } }}>
-            <Link to="/dashboard">Collections</Link>
-            <Link to="/dashboard">Nouveautés</Link>
-            <Link to="/dashboard">Best-Sellers</Link>
-            <a href="#philosophie">À propos</a>
-          </div>
-
-          <div className="nav-icons">
-            <Link to="/dashboard">
-              <span className="material-symbols-outlined">search</span>
-            </Link>
-            <Link to="/favoris">
-              <span className="material-symbols-outlined">favorite</span>
-            </Link>
-            <Link to="/panier">
-              <span className="material-symbols-outlined">shopping_cart</span>
-            </Link>
-            <Link to="/login" className="btn btn-primary" style={{ marginLeft: '1rem' }}>Se connecter</Link>
-          </div>
-        </div>
-      </nav>
+      <Header />
       
       <main>
         {/* HERO SECTION */}
@@ -63,31 +40,31 @@ const Home = () => {
           <div className="home-hero-gradient"></div>
           
           <div className="home-hero-content">
-            <span className="home-hero-subtitle">Nouvelle Collection</span>
-            <h1>La beauté à portée de main</h1>
-            <p>Tout ce dont une fille a besoin, réuni au même endroit. Découvrez notre sélection exclusive de bijoux, sacs et accessoires pour sublimer votre style.</p>
+            <span className="home-hero-subtitle">New Collection</span>
+            <h1>Beauty at your fingertips</h1>
+            <p>Everything a girl needs, all in one place. Discover our exclusive selection of jewelry, bags, and accessories to elevate your style.</p>
             <Link to="/dashboard" className="btn btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.125rem' }}>
-              Commencer vos achats
+              Start shopping
             </Link>
           </div>
         </section>
 
-        {/* L'ESSENTIEL BELLELLE */}
+        {/* THE BELLELLE ESSENTIALS */}
         <section className="bento-section">
           <div className="bento-header">
-            <h2>L'Essentiel Bellelle</h2>
+            <h2>The Bellelle Essentials</h2>
             <div className="divider"></div>
           </div>
           
           <div className="bento-grid">
-            {/* Carte 1 : Bijoux */}
+            {/* Card 1 : Jewelry */}
             <Link to="/dashboard" className="bento-card">
-              <img src="/images/bijoux.jpg" alt="Bijoux élégants" />
+              <img src="/images/bijoux.jpg" alt="Elegant jewelry" />
               <div className="bento-overlay"></div>
               <div className="bento-content">
                 <div className="bento-text">
-                  <span>Éclat intemporel</span>
-                  <h3>Bijoux</h3>
+                  <span>Timeless glow</span>
+                  <h3>Jewelry</h3>
                 </div>
                 <div className="bento-icon">
                   <span className="material-symbols-outlined">arrow_forward</span>
@@ -95,14 +72,14 @@ const Home = () => {
               </div>
             </Link>
 
-            {/* Carte 2 : Sacs & Maroquinerie */}
+            {/* Card 2 : Bags & Leather Goods */}
             <Link to="/dashboard" className="bento-card">
-              <img src="/images/sacs.jpg" alt="Sacs et maroquinerie" />
+              <img src="/images/sacs.jpg" alt="Bags and leather goods" />
               <div className="bento-overlay"></div>
               <div className="bento-content">
                 <div className="bento-text">
-                  <span>L'allure au bras</span>
-                  <h3>Sacs & Maroquinerie</h3>
+                  <span>Allure on your arm</span>
+                  <h3>Bags & Leather Goods</h3>
                 </div>
                 <div className="bento-icon">
                   <span className="material-symbols-outlined">arrow_forward</span>
@@ -110,14 +87,14 @@ const Home = () => {
               </div>
             </Link>
 
-            {/* Carte 3 : Accessoires Cheveux */}
+            {/* Card 3 : Hair Accessories */}
             <Link to="/dashboard" className="bento-card">
-              <img src="/images/cheveux.jpg" alt="Accessoires pour cheveux" />
+              <img src="/images/cheveux.jpg" alt="Hair accessories" />
               <div className="bento-overlay"></div>
               <div className="bento-content">
                 <div className="bento-text">
-                  <span>Coiffure sublimée</span>
-                  <h3>Accessoires Cheveux</h3>
+                  <span>Sublime hairstyle</span>
+                  <h3>Hair Accessories</h3>
                 </div>
                 <div className="bento-icon">
                   <span className="material-symbols-outlined">arrow_forward</span>
@@ -125,14 +102,14 @@ const Home = () => {
               </div>
             </Link>
 
-            {/* Carte 4 : Accessoires */}
+            {/* Card 4 : Accessories */}
             <Link to="/dashboard" className="bento-card">
-              <img src="/images/accessoires.jpg" alt="Accessoires divers" />
+              <img src="/images/accessoires.jpg" alt="Various accessories" />
               <div className="bento-overlay"></div>
               <div className="bento-content">
                 <div className="bento-text">
-                  <span>Le détail parfait</span>
-                  <h3>Accessoires</h3>
+                  <span>The perfect detail</span>
+                  <h3>Accessories</h3>
                 </div>
                 <div className="bento-icon">
                   <span className="material-symbols-outlined">arrow_forward</span>
@@ -142,20 +119,20 @@ const Home = () => {
           </div>
         </section>
 
-        {/* NOTRE PHILOSOPHIE */}
+        {/* OUR PHILOSOPHY */}
         <section id="philosophie" className="philosophy-section">
           <div className="philosophy-container">
             <div className="philosophy-image">
-              <img className="reveal-image" src="/images/philosophy.jpg" alt="Une femme confiante et élégante" />
+              <img className="reveal-image" src="/images/philosophy.jpg" alt="A confident and elegant woman" />
             </div>
             <div className="philosophy-content">
-              <span>Notre Philosophie</span>
-              <h2>L'Élégance au Quotidien</h2>
-              <p>Chez Bellelle, nous croyons que le style véritable naît de la confiance en soi. Notre sélection est pensée pour accompagner chaque femme dans son quotidien, du bijou discret à l'accessoire qui fait toute la différence.</p>
-              <p style={{ opacity: 0.8, fontSize: '1rem', marginBottom: '2rem' }}>Chaque pièce est une promesse de qualité, privilégiant des matériaux nobles et des designs intemporels pour une expérience luxueuse sans compromis.</p>
+              <span>Our Philosophy</span>
+              <h2>Everyday Elegance</h2>
+              <p>At Bellelle, we believe that true style stems from self-confidence. Our selection is designed to accompany every woman in her daily life, from a discreet piece of jewelry to the accessory that makes all the difference.</p>
+              <p style={{ opacity: 0.8, fontSize: '1rem', marginBottom: '2rem' }}>Every piece is a promise of quality, prioritizing noble materials and timeless designs for an uncompromising luxury experience.</p>
               <div>
                 <a href="#" className="philosophy-link">
-                  Découvrir notre histoire
+                  Discover our story
                   <span className="material-symbols-outlined">arrow_right_alt</span>
                 </a>
               </div>
@@ -169,32 +146,32 @@ const Home = () => {
         <div className="footer-grid">
           <div className="footer-brand">
             <h3>Bellelle</h3>
-            <p>L'incarnation du luxe serein. Élevez votre style avec notre sélection soigneusement élaborée de bijoux, sacs et accessoires.</p>
+            <p>The embodiment of serene luxury. Elevate your style with our carefully curated selection of jewelry, bags, and accessories.</p>
           </div>
           
           <div className="footer-links">
-            <h4>Service Client</h4>
+            <h4>Customer Service</h4>
             <ul>
-              <li><a href="#">Livraison & Retours</a></li>
-              <li><a href="#">Contactez-nous</a></li>
+              <li><a href="#">Shipping & Returns</a></li>
+              <li><a href="#">Contact Us</a></li>
               <li><a href="#">FAQ</a></li>
             </ul>
           </div>
           
           <div className="footer-links">
-            <h4>Légal</h4>
+            <h4>Legal</h4>
             <ul>
-              <li><a href="#">Politique de confidentialité</a></li>
-              <li><a href="#">Conditions Générales</a></li>
-              <li><a href="#">Mentions Légales</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms & Conditions</a></li>
+              <li><a href="#">Legal Notice</a></li>
             </ul>
           </div>
           
           <div className="footer-newsletter">
-            <h4 style={{ fontWeight: 600, marginBottom: '1rem', color: 'var(--text-main)' }}>Rejoignez le Cercle</h4>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Inscrivez-vous pour recevoir nos actualités et offres exclusives.</p>
+            <h4 style={{ fontWeight: 600, marginBottom: '1rem', color: 'var(--text-main)' }}>Join the Circle</h4>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Sign up to receive our news and exclusive offers.</p>
             <form style={{ display: 'flex', alignItems: 'flex-end' }}>
-              <input type="email" placeholder="Votre adresse email" required />
+              <input type="email" placeholder="Your email address" required />
               <button type="submit" style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', padding: '0.5rem', display: 'flex' }}>
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button>
@@ -203,7 +180,7 @@ const Home = () => {
         </div>
         
         <div className="footer-bottom">
-          <p>© 2026 Bellelle. Tous droits réservés. Style, Beauté, Élégance.</p>
+          <p>© 2026 Bellelle. All rights reserved. Style, Beauty, Elegance.</p>
         </div>
       </footer>
     </>

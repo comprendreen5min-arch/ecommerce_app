@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
+import Header from '../components/Header';
 
 const MesCommandes = () => {
   const [commandes, setCommandes] = useState([]);
@@ -19,34 +20,34 @@ const MesCommandes = () => {
       });
       setCommandes(response.data);
     } catch (error) {
-      console.error('Erreur lors de la récupération des commandes', error);
-      alert('Erreur lors du chargement de l\'historique.');
+      console.error('Error fetching orders', error);
+      alert('Error loading history.');
     } finally {
       setLoading(false);
     }
   };
 
   const getStatusBadge = (status) => {
-    let config = { label: 'Inconnu', color: '#6b7280', bg: '#f3f4f6' };
+    let config = { label: 'Unknown', color: '#6b7280', bg: '#f3f4f6' };
     
     switch(status) {
       case 'en_attente': 
-        config = { label: 'En attente', color: '#4b5563', bg: '#e5e7eb' }; 
+        config = { label: 'Pending', color: '#4b5563', bg: '#e5e7eb' }; 
         break;
       case 'payee': 
-        config = { label: 'Payée', color: '#1d4ed8', bg: '#dbeafe' }; 
+        config = { label: 'Paid', color: '#1d4ed8', bg: '#dbeafe' }; 
         break;
       case 'en_preparation': 
-        config = { label: 'En préparation', color: '#b45309', bg: '#fef3c7' }; 
+        config = { label: 'Processing', color: '#b45309', bg: '#fef3c7' }; 
         break;
       case 'expediee': 
-        config = { label: 'Expédiée', color: '#6d28d9', bg: '#ede9fe' }; 
+        config = { label: 'Shipped', color: '#6d28d9', bg: '#ede9fe' }; 
         break;
       case 'livree': 
-        config = { label: 'Livrée', color: '#047857', bg: '#d1fae5' }; 
+        config = { label: 'Delivered', color: '#047857', bg: '#d1fae5' }; 
         break;
       case 'annulee': 
-        config = { label: 'Annulée', color: '#b91c1c', bg: '#fee2e2' }; 
+        config = { label: 'Canceled', color: '#b91c1c', bg: '#fee2e2' }; 
         break;
       default: break;
     }
@@ -71,16 +72,16 @@ const MesCommandes = () => {
     if (statut === 'annulee') {
       return (
         <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#fee2e2', color: '#b91c1c', borderRadius: '4px', textAlign: 'center', fontWeight: 'bold' }}>
-          Cette commande a été annulée.
+          This order has been canceled.
         </div>
       );
     }
 
     const steps = [
-      { key: 'payee', label: 'Payée' },
-      { key: 'en_preparation', label: 'En préparation' },
-      { key: 'expediee', label: 'Expédiée' },
-      { key: 'livree', label: 'Livrée' }
+      { key: 'payee', label: 'Paid' },
+      { key: 'en_preparation', label: 'Processing' },
+      { key: 'expediee', label: 'Shipped' },
+      { key: 'livree', label: 'Delivered' }
     ];
 
     // Trouver l'index de l'étape actuelle. "en_attente" est avant tout (index -1)
@@ -92,7 +93,7 @@ const MesCommandes = () => {
 
     return (
       <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
-        <h4 style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>Suivi de livraison</h4>
+        <h4 style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>Delivery tracking</h4>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative' }}>
           {/* Ligne de fond */}
           <div style={{ position: 'absolute', top: '15px', left: '10%', right: '10%', height: '3px', backgroundColor: '#e5e7eb', zIndex: 1 }}></div>
@@ -138,25 +139,20 @@ const MesCommandes = () => {
   };
 
   if (loading) {
-    return <div className="container" style={{ padding: '2rem' }}>Chargement de votre historique...</div>;
+    return <div className="container" style={{ padding: '2rem' }}>Loading your history...</div>;
   }
 
   return (
     <div>
-      <nav className="navbar container">
-        <div className="navbar-brand">Bellelle - Mes Commandes</div>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <Link to="/dashboard" className="btn btn-outline">Retour au catalogue</Link>
-        </div>
-      </nav>
+      <Header />
 
       <main className="container" style={{ padding: '2rem 1.5rem' }}>
-        <h2 style={{ marginBottom: '2rem' }}>Historique de vos commandes</h2>
+        <h2 style={{ marginBottom: '2rem' }}>Your order history</h2>
 
         {commandes.length === 0 ? (
           <div style={{ backgroundColor: 'var(--bg-card)', padding: '3rem', borderRadius: 'var(--radius)', textAlign: 'center' }}>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', marginBottom: '1.5rem' }}>Vous n'avez pas encore passé de commande.</p>
-            <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>Découvrir nos produits</button>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', marginBottom: '1.5rem' }}>You haven't placed any orders yet.</p>
+            <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>Discover our products</button>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -165,11 +161,11 @@ const MesCommandes = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
                   <div>
                     <h3 style={{ margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                      Commande #{commande.id}
+                      Order #{commande.id}
                       {getStatusBadge(commande.statut)}
                     </h3>
                     <div style={{ color: 'var(--text-muted)' }}>
-                      Passée le {new Date(commande.created_at).toLocaleDateString('fr-FR')} à {new Date(commande.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                      Placed on {new Date(commande.created_at).toLocaleDateString('en-US')} at {new Date(commande.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                   <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>
@@ -178,7 +174,7 @@ const MesCommandes = () => {
                 </div>
 
                 <div style={{ backgroundColor: '#f9fafb', padding: '1.5rem', borderRadius: 'var(--radius)' }}>
-                  <h4 style={{ margin: '0 0 1rem 0' }}>Articles commandés ({commande.items?.length || 0})</h4>
+                  <h4 style={{ margin: '0 0 1rem 0' }}>Ordered items ({commande.items?.length || 0})</h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {commande.items?.map((item) => (
                       <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
@@ -189,8 +185,8 @@ const MesCommandes = () => {
                             <div style={{ width: '50px', height: '50px', backgroundColor: '#e5e7eb', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', color: '#9ca3af' }}>N/A</div>
                           )}
                           <div>
-                            <div style={{ fontWeight: '500' }}>{item.produit?.nom || 'Produit indisponible'}</div>
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Quantité: {item.quantite}</div>
+                            <div style={{ fontWeight: '500' }}>{item.produit?.nom || 'Product unavailable'}</div>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Quantity: {item.quantite}</div>
                           </div>
                         </div>
                         <div style={{ fontWeight: 'bold' }}>

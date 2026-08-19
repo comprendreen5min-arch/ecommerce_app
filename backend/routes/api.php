@@ -11,6 +11,8 @@ use App\Http\Controllers\StatsController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\AdminCommandeController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminSidebarController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -44,6 +46,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Commandes admin
     Route::get('/admin/commandes', [AdminCommandeController::class, 'index']);
     Route::put('/admin/commandes/{id}/statut', [AdminCommandeController::class, 'updateStatut']);
+    
+    // Users admin
+    Route::get('/admin/users', [AdminUserController::class, 'index']);
+    
+    // Sidebar admin
+    Route::get('/admin/sidebar', [AdminSidebarController::class, 'index']);
     
     // Routes Wishlist
     Route::get('/wishlist', [WishlistController::class, 'index']);

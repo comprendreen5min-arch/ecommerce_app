@@ -11,6 +11,7 @@ import CommandeConfirmee from './pages/CommandeConfirmee';
 import MesCommandes from './pages/MesCommandes';
 import AdminStats from './pages/AdminStats';
 import AdminCommandes from './pages/AdminCommandes';
+import AdminCustomers from './pages/AdminCustomers';
 import Wishlist from './pages/Wishlist';
 
 function App() {
@@ -45,6 +46,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AdminCommandes />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/admin/customers" 
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminCustomers />
             </ProtectedRoute>
           } 
         />

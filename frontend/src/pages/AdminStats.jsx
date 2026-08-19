@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import AdminLayout from '../components/AdminLayout';
 
 const AdminStats = () => {
   const [stats, setStats] = useState(null);
@@ -19,8 +20,8 @@ const AdminStats = () => {
       });
       setStats(response.data);
     } catch (error) {
-      console.error('Erreur lors de la récupération des statistiques', error);
-      alert('Erreur lors du chargement des statistiques.');
+      console.error('Error fetching statistics', error);
+      alert('Error loading statistics.');
     } finally {
       setLoading(false);
     }
@@ -33,26 +34,15 @@ const AdminStats = () => {
   };
 
   if (loading) {
-    return <div className="container" style={{ padding: '2rem' }}>Chargement des statistiques...</div>;
+    return <div className="container" style={{ padding: '2rem' }}>Loading statistics...</div>;
   }
 
   return (
-    <div>
-      <nav className="navbar container">
-        <div className="navbar-brand">Bellelle - Admin Stats</div>
-        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-          <Link to="/admin/commandes" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
-            📦 Commandes
-          </Link>
-          <Link to="/admin/dashboard" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
-            🛍️ Produits
-          </Link>
-          <button onClick={handleLogout} className="btn btn-outline">Déconnexion</button>
-        </div>
-      </nav>
-
-      <main className="container" style={{ padding: '2rem 1.5rem' }}>
-        <h2 style={{ marginBottom: '2rem' }}>Tableau de bord</h2>
+    <AdminLayout activeTab="stats">
+      <div style={{ marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border)' }}>
+        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Dashboard</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Overview of your boutique's performance.</p>
+      </div>
 
         {/* Cartes KPI */}
         <div style={{ 
@@ -63,7 +53,7 @@ const AdminStats = () => {
         }}>
           {/* Chiffre d'affaires */}
           <div style={{ backgroundColor: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Chiffre d'Affaires</h3>
+            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Revenue</h3>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary)' }}>
               {Number(stats.chiffre_affaires || 0).toFixed(2)} €
             </div>
@@ -71,7 +61,7 @@ const AdminStats = () => {
 
           {/* Nombre de commandes */}
           <div style={{ backgroundColor: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Commandes Validées</h3>
+            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Validated Orders</h3>
             <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>
               {stats.total_commandes}
             </div>
@@ -79,7 +69,7 @@ const AdminStats = () => {
 
           {/* Produits en catalogue */}
           <div style={{ backgroundColor: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Produits en catalogue</h3>
+            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Products in catalog</h3>
             <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>
               {stats.total_produits}
             </div>
@@ -87,25 +77,25 @@ const AdminStats = () => {
 
           {/* Alertes Stock */}
           <div style={{ backgroundColor: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', borderLeft: stats.ruptures_stock > 0 ? '4px solid var(--danger)' : '4px solid var(--success)' }}>
-            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Alertes de Stock</h3>
+            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Stock Alerts</h3>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: stats.ruptures_stock > 0 ? 'var(--danger)' : 'var(--success)' }}>
-              {stats.ruptures_stock} <span style={{ fontSize: '1rem', fontWeight: 'normal', color: 'var(--text-main)' }}>produit(s) en alerte</span>
+              {stats.ruptures_stock} <span style={{ fontSize: '1rem', fontWeight: 'normal', color: 'var(--text-main)' }}>product(s) on alert</span>
             </div>
           </div>
         </div>
 
         {/* Top 5 Produits */}
         <div style={{ backgroundColor: 'var(--bg-card)', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-          <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }}>Top 5 des ventes</h3>
+          <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }}>Top 5 Sales</h3>
           
           {stats.top_produits && stats.top_produits.length > 0 ? (
             <div className="table-container">
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>ID Produit</th>
-                    <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Nom du produit</th>
-                    <th style={{ textAlign: 'right', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Quantité vendue</th>
+                    <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Product ID</th>
+                    <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Product Name</th>
+                    <th style={{ textAlign: 'right', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Quantity sold</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -122,11 +112,10 @@ const AdminStats = () => {
               </table>
             </div>
           ) : (
-            <p style={{ color: 'var(--text-muted)' }}>Aucune vente enregistrée pour le moment.</p>
+            <p style={{ color: 'var(--text-muted)' }}>No sales recorded yet.</p>
           )}
         </div>
-      </main>
-    </div>
+    </AdminLayout>
   );
 };
 

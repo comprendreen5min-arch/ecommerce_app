@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useCart } from '../context/CartContext';
+import Header from '../components/Header';
 
 const Panier = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -21,7 +22,7 @@ const Panier = () => {
       });
       setCartItems(response.data);
     } catch (error) {
-      console.error('Erreur lors de la récupération du panier', error);
+      console.error('Error fetching cart', error);
     } finally {
       setLoading(false);
     }
@@ -38,13 +39,13 @@ const Panier = () => {
       setCartItems(items => items.map(item => item.id === id ? { ...item, quantite: newQuantity } : item));
       fetchCartCount();
     } catch (error) {
-      console.error('Erreur lors de la modification de la quantité', error);
-      alert('Erreur lors de la mise à jour.');
+      console.error('Error updating quantity', error);
+      alert('Error updating.');
     }
   };
 
   const removeItem = async (id) => {
-    if (!window.confirm('Retirer cet article du panier ?')) return;
+    if (!window.confirm('Remove this item from the cart?')) return;
     try {
       const token = localStorage.getItem('token');
       await api.delete(`/panier/${id}`, {
@@ -52,10 +53,10 @@ const Panier = () => {
       });
       setCartItems(items => items.filter(item => item.id !== id));
       fetchCartCount();
-      showToast('Article retiré du panier');
+      showToast('Item removed from cart');
     } catch (error) {
-      console.error('Erreur lors de la suppression de l\'article', error);
-      alert('Erreur lors de la suppression.');
+      console.error('Error removing item', error);
+      alert('Error removing.');
     }
   };
 
@@ -70,29 +71,33 @@ const Panier = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchCartCount();
-      showToast('Commande validée avec succès !');
+      showToast('Order placed successfully!');
       navigate(`/commande-confirmee/${response.data.commande.id}`);
     } catch (error) {
-      console.error('Erreur lors de la validation de la commande', error);
-      alert('Erreur lors de la validation de la commande.');
+      console.error('Error placing order', error);
+      alert('Error placing order.');
     }
   };
 
   return (
     <div>
-      <nav className="navbar container">
-        <div className="navbar-brand">Bellelle - Votre Panier</div>
-        <button onClick={() => navigate('/dashboard')} className="btn btn-outline">Continuer vos achats</button>
-      </nav>
+      <Header />
 
       <main className="container" style={{ padding: '2rem 1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '2rem', margin: 0, color: 'var(--text-main)' }}>Your Cart</h1>
+          <button onClick={() => navigate('/dashboard')} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_back</span>
+            Back to Catalog
+          </button>
+        </div>
         {loading ? (
-          <p>Chargement du panier...</p>
+          <p>Loading cart...</p>
         ) : cartItems.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '4rem', backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius)' }}>
-            <h2 style={{ marginBottom: '1rem' }}>Votre panier est vide</h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Découvrez nos produits et ajoutez-les au panier.</p>
-            <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>Voir le catalogue</button>
+            <h2 style={{ marginBottom: '1rem' }}>Your cart is empty</h2>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Discover our products and add them to your cart.</p>
+            <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>View Catalog</button>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
@@ -100,10 +105,10 @@ const Panier = () => {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
-                    <th>Produit</th>
-                    <th>Prix unitaire</th>
-                    <th>Quantité</th>
-                    <th>Sous-total</th>
+                    <th>Product</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -144,7 +149,7 @@ const Panier = () => {
                       </td>
                       <td style={{ fontWeight: '600' }}>{(item.quantite * item.produit.prix).toFixed(2)} €</td>
                       <td>
-                        <button className="btn btn-danger" onClick={() => removeItem(item.id)}>Retirer</button>
+                        <button className="btn btn-danger" onClick={() => removeItem(item.id)}>Remove</button>
                       </td>
                     </tr>
                   ))}
@@ -162,12 +167,12 @@ const Panier = () => {
               alignItems: 'flex-end',
               gap: '1rem'
             }}>
-              <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Total à payer :</h2>
+              <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Total:</h2>
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>
                 {totalCartPrice.toFixed(2)} €
               </div>
               <button className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem', marginTop: '1rem' }} onClick={handleCheckout}>
-                Valider la commande
+                Checkout
               </button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import AdminLayout from '../components/AdminLayout';
 
 const AdminCommandes = () => {
   const [commandes, setCommandes] = useState([]);
@@ -19,8 +20,8 @@ const AdminCommandes = () => {
       });
       setCommandes(response.data);
     } catch (error) {
-      console.error('Erreur lors de la récupération des commandes', error);
-      alert('Erreur lors du chargement des commandes.');
+      console.error('Error fetching orders', error);
+      alert('Error loading orders.');
     } finally {
       setLoading(false);
     }
@@ -35,8 +36,8 @@ const AdminCommandes = () => {
       // Mettre à jour l'état local
       setCommandes(commandes.map(cmd => cmd.id === commandeId ? { ...cmd, statut: nouveauStatut } : cmd));
     } catch (error) {
-      console.error('Erreur lors de la mise à jour du statut', error);
-      alert('Erreur lors de la mise à jour du statut.');
+      console.error('Error updating status', error);
+      alert('Error updating status.');
     }
   };
 
@@ -47,12 +48,12 @@ const AdminCommandes = () => {
   };
 
   const statusOptions = [
-    { value: 'en_attente', label: 'En attente' },
-    { value: 'payee', label: 'Payée' },
-    { value: 'en_preparation', label: 'En préparation' },
-    { value: 'expediee', label: 'Expédiée' },
-    { value: 'livree', label: 'Livrée' },
-    { value: 'annulee', label: 'Annulée' }
+    { value: 'en_attente', label: 'Pending' },
+    { value: 'payee', label: 'Paid' },
+    { value: 'en_preparation', label: 'Processing' },
+    { value: 'expediee', label: 'Shipped' },
+    { value: 'livree', label: 'Delivered' },
+    { value: 'annulee', label: 'Canceled' }
   ];
 
   const getStatusColor = (status) => {
@@ -68,40 +69,29 @@ const AdminCommandes = () => {
   };
 
   if (loading) {
-    return <div className="container" style={{ padding: '2rem' }}>Chargement des commandes...</div>;
+    return <div className="container" style={{ padding: '2rem' }}>Loading orders...</div>;
   }
 
   return (
-    <div>
-      <nav className="navbar container">
-        <div className="navbar-brand">Bellelle - Admin Commandes</div>
-        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-          <Link to="/admin/dashboard" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
-            📦 Produits
-          </Link>
-          <Link to="/admin/stats" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
-            📊 Stats
-          </Link>
-          <button onClick={handleLogout} className="btn btn-outline">Déconnexion</button>
-        </div>
-      </nav>
-
-      <main className="container" style={{ padding: '2rem 1.5rem' }}>
-        <h2 style={{ marginBottom: '2rem' }}>Gestion des Commandes</h2>
+    <AdminLayout activeTab="orders">
+      <div style={{ marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border)' }}>
+        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Order Management</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Manage and process customer orders.</p>
+      </div>
 
         <div style={{ backgroundColor: 'var(--bg-card)', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
           {commandes.length === 0 ? (
-            <p style={{ color: 'var(--text-muted)' }}>Aucune commande trouvée.</p>
+            <p style={{ color: 'var(--text-muted)' }}>No orders found.</p>
           ) : (
             <div className="table-container">
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
                     <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>ID</th>
-                    <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Client</th>
+                    <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Customer</th>
                     <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Date</th>
                     <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Total</th>
-                    <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Statut</th>
+                    <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Status</th>
                     <th style={{ textAlign: 'left', padding: '1rem', borderBottom: '1px solid var(--border)' }}>Actions</th>
                   </tr>
                 </thead>
@@ -110,11 +100,11 @@ const AdminCommandes = () => {
                     <tr key={commande.id} style={{ backgroundColor: index % 2 === 0 ? 'transparent' : '#f9fafb' }}>
                       <td style={{ padding: '1rem', borderBottom: '1px solid var(--border)' }}>#{commande.id}</td>
                       <td style={{ padding: '1rem', borderBottom: '1px solid var(--border)', fontWeight: '500' }}>
-                        {commande.user?.name || 'Inconnu'} <br/>
+                        {commande.user?.name || 'Unknown'} <br/>
                         <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{commande.user?.email}</span>
                       </td>
                       <td style={{ padding: '1rem', borderBottom: '1px solid var(--border)' }}>
-                        {new Date(commande.created_at).toLocaleDateString('fr-FR')} à {new Date(commande.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(commande.created_at).toLocaleDateString('en-US')} at {new Date(commande.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                       </td>
                       <td style={{ padding: '1rem', borderBottom: '1px solid var(--border)', fontWeight: 'bold' }}>
                         {commande.total} €
@@ -143,10 +133,10 @@ const AdminCommandes = () => {
                       </td>
                       <td style={{ padding: '1rem', borderBottom: '1px solid var(--border)' }}>
                         <details style={{ cursor: 'pointer' }}>
-                          <summary style={{ color: 'var(--primary)', fontWeight: '500' }}>Voir articles ({commande.items?.length || 0})</summary>
+                          <summary style={{ color: 'var(--primary)', fontWeight: '500' }}>View items ({commande.items?.length || 0})</summary>
                           <ul style={{ marginTop: '0.5rem', paddingLeft: '1.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
                             {commande.items?.map(item => (
-                              <li key={item.id}>{item.produit?.nom || 'Produit inconnu'} - {item.quantite}x ({item.prix_unitaire} €)</li>
+                              <li key={item.id}>{item.produit?.nom || 'Unknown product'} - {item.quantite}x ({item.prix_unitaire} €)</li>
                             ))}
                           </ul>
                         </details>
@@ -158,8 +148,7 @@ const AdminCommandes = () => {
             </div>
           )}
         </div>
-      </main>
-    </div>
+    </AdminLayout>
   );
 };
 

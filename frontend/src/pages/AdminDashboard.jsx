@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import AdminLayout from '../components/AdminLayout';
 
 const AdminDashboard = () => {
   const [produits, setProduits] = useState([]);
@@ -16,19 +17,33 @@ const AdminDashboard = () => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [flashMessage, setFlashMessage] = useState('');
+  const [adminUser, setAdminUser] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchProduits();
+    fetchUser();
   }, []);
+
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.get('/user', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setAdminUser(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const fetchProduits = async () => {
     try {
       const response = await api.get('/produits');
       setProduits(response.data);
     } catch (error) {
-      console.error('Erreur lors de la récupération des produits', error);
+      console.error('Error fetching products', error);
     } finally {
       setLoading(false);
     }
@@ -41,13 +56,13 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Voulez-vous vraiment supprimer ce produit ?')) {
+    if (window.confirm('Are you sure you want to delete this product?')) {
       try {
         await api.delete(`/produits/${id}`);
         setProduits(produits.filter(p => p.id !== id));
-        showFlashMessage('Produit supprimé avec succès !');
+        showFlashMessage('Product deleted successfully!');
       } catch (error) {
-        alert('Erreur lors de la suppression');
+        alert('Error deleting');
       }
     }
   };
@@ -120,52 +135,52 @@ const AdminDashboard = () => {
         // En PHP/Laravel, un PUT avec FormData peut poser problème. On utilise _method POST spoofing.
         data.append('_method', 'PUT');
         await api.post(`/produits/${editingProduct.id}`, data, config);
-        showFlashMessage('Produit modifié avec succès !');
+        showFlashMessage('Product modified successfully!');
       } else {
         await api.post('/produits', data, config);
-        showFlashMessage('Produit ajouté avec succès !');
+        showFlashMessage('Product added successfully!');
       }
       fetchProduits();
       closeModal();
     } catch (error) {
       console.error(error);
-      const errorMessage = error.response?.data?.message || 'Une erreur est survenue lors de l\'enregistrement.';
+      const errorMessage = error.response?.data?.message || 'An error occurred during saving.';
       alert(errorMessage);
     }
   };
 
   return (
-    <div>
-      <nav className="navbar container">
-        <div className="navbar-brand">Bellelle - Admin Dashboard</div>
-        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-          <Link to="/admin/commandes" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
-            📦 Commandes
-          </Link>
-          <Link to="/admin/stats" style={{ textDecoration: 'none', color: 'var(--text-main)' }}>
-            📊 Stats
-          </Link>
-          <button onClick={handleLogout} className="btn btn-outline">Déconnexion</button>
+    <AdminLayout activeTab="inventory">
+      
+      {adminUser && (
+        <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '2rem', marginBottom: '0.25rem', fontFamily: 'var(--font-display)', color: 'var(--text-main)' }}>
+            Hello, {adminUser.name.split(' ')[0]}
+          </h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+          </p>
         </div>
-      </nav>
+      )}
 
-      <main className="container" style={{ padding: '2rem 1.5rem', position: 'relative' }}>
-        
-        {flashMessage && (
-          <div style={{ backgroundColor: 'var(--success)', color: 'white', padding: '1rem', borderRadius: 'var(--radius)', marginBottom: '1rem', textAlign: 'center' }}>
-            {flashMessage}
-          </div>
-        )}
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <h2>Gestion des produits</h2>
-          <button className="btn btn-primary" onClick={() => openModal()}>
-            Ajouter un produit
-          </button>
+      {flashMessage && (
+        <div style={{ backgroundColor: 'var(--success)', color: 'white', padding: '1rem', borderRadius: 'var(--radius)', marginBottom: '1rem', textAlign: 'center' }}>
+          {flashMessage}
         </div>
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border)' }}>
+        <div>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Product Management</h2>
+          <p style={{ color: 'var(--text-muted)' }}>Manage your boutique's inventory and product details.</p>
+        </div>
+        <button className="btn btn-primary" onClick={() => openModal()}>
+          Add a product
+        </button>
+      </div>
 
         {loading ? (
-          <p>Chargement...</p>
+          <p>Loading...</p>
         ) : (
           <div className="table-container">
             <table>
@@ -173,9 +188,9 @@ const AdminDashboard = () => {
                 <tr>
                   <th>ID</th>
                   <th>Image</th>
-                  <th>Nom</th>
-                  <th>Catégorie</th>
-                  <th>Prix</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
                   <th>Stock</th>
                   <th>Actions</th>
                 </tr>
@@ -205,10 +220,10 @@ const AdminDashboard = () => {
                     <td>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         <button className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.875rem' }} onClick={() => openModal(produit)}>
-                          Modifier
+                          Edit
                         </button>
                         <button className="btn btn-danger" style={{ padding: '0.25rem 0.5rem', fontSize: '0.875rem' }} onClick={() => handleDelete(produit.id)}>
-                          Supprimer
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -216,7 +231,7 @@ const AdminDashboard = () => {
                 ))}
                 {produits.length === 0 && (
                   <tr>
-                    <td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>Aucun produit trouvé</td>
+                    <td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>No products found</td>
                   </tr>
                 )}
               </tbody>
@@ -228,22 +243,22 @@ const AdminDashboard = () => {
         {isModalOpen && (
           <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
             <div style={{ backgroundColor: 'var(--bg-card)', padding: '2rem', borderRadius: 'var(--radius)', width: '100%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto' }}>
-              <h3 style={{ marginBottom: '1.5rem' }}>{editingProduct ? 'Modifier le produit' : 'Ajouter un produit'}</h3>
+              <h3 style={{ marginBottom: '1.5rem' }}>{editingProduct ? 'Edit product' : 'Add a product'}</h3>
               
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label className="form-label">Nom</label>
+                  <label className="form-label">Name</label>
                   <input type="text" className="form-input" name="nom" value={formData.nom} onChange={handleInputChange} required />
                 </div>
                 
                 <div className="form-group">
-                  <label className="form-label">Catégorie</label>
+                  <label className="form-label">Category</label>
                   <input type="text" className="form-input" name="categorie" value={formData.categorie} onChange={handleInputChange} required />
                 </div>
 
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <div className="form-group" style={{ flex: 1 }}>
-                    <label className="form-label">Prix (€)</label>
+                    <label className="form-label">Price (€)</label>
                     <input type="number" step="0.01" min="0" className="form-input" name="prix" value={formData.prix} onChange={handleInputChange} required />
                   </div>
                   <div className="form-group" style={{ flex: 1 }}>
@@ -262,21 +277,20 @@ const AdminDashboard = () => {
                   <input type="file" className="form-input" onChange={handleFileChange} accept="image/*" />
                   {editingProduct && editingProduct.image && !imageFile && (
                     <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                      L'image actuelle sera conservée si vous n'en sélectionnez pas une nouvelle.
+                      The current image will be kept if you do not select a new one.
                     </div>
                   )}
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem' }}>
-                  <button type="button" className="btn btn-outline" onClick={closeModal}>Annuler</button>
-                  <button type="submit" className="btn btn-primary">{editingProduct ? 'Enregistrer les modifications' : 'Ajouter'}</button>
+                  <button type="button" className="btn btn-outline" onClick={closeModal}>Cancel</button>
+                  <button type="submit" className="btn btn-primary">{editingProduct ? 'Save changes' : 'Add'}</button>
                 </div>
               </form>
             </div>
           </div>
         )}
-      </main>
-    </div>
+    </AdminLayout>
   );
 };
 
