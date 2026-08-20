@@ -132,16 +132,6 @@ npm run build
 ```
 This will generate a `dist` folder containing the optimized, minified static files ready for deployment.
 
-## 🌍 Deployment
-
-This project's decoupled architecture makes it easy to deploy using modern, free hosting services:
-
-- **Frontend Deployment (.vercel.app):** The `frontend` (React/Vite) can be deployed easily and for free on **Vercel**. Simply connect your GitHub repository to Vercel, select the `frontend` directory as the root, and Vercel will automatically build and host your React app with a `.vercel.app` domain.
-- **Backend Deployment:** The `backend` (Laravel) can be deployed on services like **Render** (using their free Web Service tier) or traditional free shared hosting like **InfinityFree**.
-- **Database:** A free MySQL database can be hosted on services like **Clever-Cloud** or **Aiven**.
-
-*Important Note for Deployment:* When deploying, ensure that you update the `VITE_API_BASE_URL` in the frontend to point to your live backend URL, and configure CORS in the Laravel backend to accept requests from your live frontend domain.
-
 ## ⚠️ Important Notes
 
 - Since this app uses Laravel Sanctum for API authentication, ensure that your `SANCTUM_STATEFUL_DOMAINS` and `SESSION_DOMAIN` in the backend `.env` file are configured correctly if you run into CORS or session/cookie issues between the frontend and backend.
